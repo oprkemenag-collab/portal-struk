@@ -3,36 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Upload Struk</title>
+    <title>Portal Unduh Struk</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-200 p-8">
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold text-center mb-6">Dashboard Admin Struk</h1>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-8">Portal Arsip Struk Pelanggan</h1>
         
-        <!-- Area Login -->
-        <div id="login-area" class="mb-6">
-            <input type="password" id="password" placeholder="Masukkan Password Admin" class="w-full border p-2 rounded mb-3">
-            <button onclick="login()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Masuk</button>
+        <!-- Area Kategori/Folder -->
+        <div id="folder-view">
+            <h2 class="text-xl font-semibold mb-4">Pilih Instansi/Kategori:</h2>
+            <div id="loading-folders" class="text-gray-500">Memuat data folder...</div>
+            <div id="folder-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Folder akan muncul di sini -->
+            </div>
         </div>
 
-        <!-- Area Dashboard Utama (Awalnya Sembunyi) -->
-        <div id="dashboard-area" class="hidden">
-            <div class="bg-blue-50 p-4 rounded mb-6 border border-blue-200">
-                <h2 class="font-bold mb-2">1. Buat Folder Instansi Baru</h2>
-                <div class="flex gap-2">
-                    <input type="text" id="new-folder-name" placeholder="Nama Instansi (Cth: KUA)" class="flex-1 border p-2 rounded">
-                    <button onclick="createFolder()" id="btn-folder" class="bg-blue-600 text-white px-4 py-2 rounded">Buat Folder</button>
-                </div>
-            </div>
-
-            <div class="bg-green-50 p-4 rounded border border-green-200">
-                <h2 class="font-bold mb-2">2. Upload Struk PDF</h2>
-                <select id="folder-select" class="w-full border p-2 rounded mb-3">
-                    <option value="">Pilih Folder Instansi...</option>
-                </select>
-                <input type="file" id="file-input" accept="application/pdf" class="w-full border p-2 rounded mb-3 bg-white">
-                <button onclick="uploadFile()" id="btn-upload" class="w-full bg-green-600 text-white p-2 rounded font-bold">Upload PDF</button>
+        <!-- Area File Struk (Awalnya Sembunyi) -->
+        <div id="file-view" class="hidden">
+            <button onclick="backToFolders()" class="mb-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">&larr; Kembali ke Folder</button>
+            <h2 id="folder-title" class="text-xl font-semibold mb-4">Daftar Struk</h2>
+            <div id="loading-files" class="text-gray-500 hidden">Memuat struk...</div>
+            <div id="file-container" class="space-y-3">
+                <!-- File PDF akan muncul di sini -->
             </div>
         </div>
     </div>
@@ -40,85 +33,54 @@
     <script>
         // GANTI TULISAN DI BAWAH INI DENGAN URL WEB APP GOOGLE SCRIPT ANDA
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx3GQNc9k36TF7gWfGIGFpmHTAwMxB72FjPxCk9qbmA4mMszdOzr0vQEqmPX6jqCGXlkQ/exec";
-        let adminPass = "";
 
-        // Fungsi Login & Ambil Folder
-        function login() {
-            adminPass = document.getElementById('password').value;
-            if(!adminPass) return alert("Masukkan password!");
-            
-            document.getElementById('login-area').classList.add('hidden');
-            document.getElementById('dashboard-area').classList.remove('hidden');
-            loadFolders();
-        }
+        // Ambil Daftar Folder saat web dibuka
+        fetch(SCRIPT_URL + "?action=getFolders")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading-folders').classList.add('hidden');
+                const container = document.getElementById('folder-container');
+                data.data.forEach(folder => {
+                    container.innerHTML += `
+                        <div onclick="openFolder('${folder.id}', '${folder.name}')" 
+                             class="bg-white p-6 rounded-lg shadow cursor-pointer hover:shadow-md border-t-4 border-blue-500 transition">
+                            <h3 class="text-lg font-bold text-gray-800">📁 ${folder.name}</h3>
+                        </div>
+                    `;
+                });
+            });
 
-        // Memuat dropdown folder
-        function loadFolders() {
-            fetch(SCRIPT_URL + "?action=getFolders")
+        // Buka Folder dan Ambil File
+        function openFolder(folderId, folderName) {
+            document.getElementById('folder-view').classList.add('hidden');
+            document.getElementById('file-view').classList.remove('hidden');
+            document.getElementById('folder-title').innerText = "Struk Instansi: " + folderName;
+            document.getElementById('file-container').innerHTML = '';
+            document.getElementById('loading-files').classList.remove('hidden');
+
+            fetch(SCRIPT_URL + "?action=getFiles&folderId=" + folderId)
                 .then(res => res.json())
                 .then(data => {
-                    const select = document.getElementById('folder-select');
-                    select.innerHTML = '<option value="">Pilih Folder Instansi...</option>';
-                    data.data.forEach(folder => {
-                        select.innerHTML += `<option value="${folder.id}">${folder.name}</option>`;
+                    document.getElementById('loading-files').classList.add('hidden');
+                    const container = document.getElementById('file-container');
+                    if(data.data.length === 0) {
+                        container.innerHTML = '<p class="text-gray-500">Belum ada struk di folder ini.</p>';
+                    }
+                    data.data.forEach(file => {
+                        container.innerHTML += `
+                            <div class="bg-white p-4 rounded shadow flex justify-between items-center">
+                                <span class="font-medium text-gray-700">📄 ${file.name}</span>
+                                <a href="${file.url}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Download</a>
+                            </div>
+                        `;
                     });
                 });
         }
 
-        // Fungsi Buat Folder
-        function createFolder() {
-            const name = document.getElementById('new-folder-name').value;
-            if(!name) return alert("Isi nama folder!");
-            const btn = document.getElementById('btn-folder');
-            btn.innerText = "Memproses...";
-            
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'createFolder', password: adminPass, folderName: name })
-            }).then(res => res.json()).then(res => {
-                alert(res.message);
-                btn.innerText = "Buat Folder";
-                document.getElementById('new-folder-name').value = '';
-                if(res.status === 'success') loadFolders(); // Refresh dropdown
-            });
-        }
-
-        // Fungsi Upload PDF
-        function uploadFile() {
-            const folderId = document.getElementById('folder-select').value;
-            const fileInput = document.getElementById('file-input');
-            
-            if(!folderId) return alert("Pilih folder terlebih dahulu!");
-            if(fileInput.files.length === 0) return alert("Pilih file PDF!");
-
-            const file = fileInput.files[0];
-            const btn = document.getElementById('btn-upload');
-            btn.innerText = "Mengunggah... Mohon tunggu";
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Hapus awalan data:application/pdf;base64, agar bisa dibaca Apps Script
-                const base64Data = e.target.result.split(',')[1];
-                
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ 
-                        action: 'uploadFile', 
-                        password: adminPass, 
-                        folderId: folderId, 
-                        fileName: file.name, 
-                        base64: base64Data 
-                    })
-                }).then(res => res.json()).then(res => {
-                    alert(res.message);
-                    btn.innerText = "Upload PDF";
-                    fileInput.value = '';
-                }).catch(err => {
-                    alert("Error: Pastikan ukuran PDF tidak terlalu besar (maks ~3MB)");
-                    btn.innerText = "Upload PDF";
-                });
-            };
-            reader.readAsDataURL(file);
+        // Tombol Kembali
+        function backToFolders() {
+            document.getElementById('file-view').classList.add('hidden');
+            document.getElementById('folder-view').classList.remove('hidden');
         }
     </script>
 </body>

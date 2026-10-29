@@ -3,46 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Upload Struk</title>
+    <title>Admin Panel - Portal Arsip</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
 </head>
-<body class="bg-gray-200 p-8">
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 class="text-2xl font-bold text-center mb-6">Dashboard Admin Struk</h1>
-        
-        <!-- Area Login -->
-        <div id="login-area" class="mb-6">
-            <input type="password" id="password" placeholder="Masukkan Password Admin" class="w-full border p-2 rounded mb-3">
-            <button onclick="login()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Masuk</button>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-100 to-slate-200">
+    
+    <div class="w-full max-w-3xl">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-slate-800 tracking-tight">Admin Dashboard</h1>
+            <p class="text-slate-500 mt-2 font-semibold text-lg">Pusat Kendali Folder & Upload Dokumen</p>
         </div>
 
-        <!-- Area Dashboard Utama (Awalnya Sembunyi) -->
-        <div id="dashboard-area" class="hidden">
-            <div class="bg-blue-50 p-4 rounded mb-6 border border-blue-200">
-                <h2 class="font-bold mb-2">1. Buat Folder Instansi Baru</h2>
-                <div class="flex gap-2">
-                    <input type="text" id="new-folder-name" placeholder="Nama Instansi (Cth: KUA)" class="flex-1 border p-2 rounded">
-                    <button onclick="createFolder()" id="btn-folder" class="bg-blue-600 text-white px-4 py-2 rounded">Buat Folder</button>
+        <div id="login-area" class="bg-white p-10 rounded-3xl shadow-xl max-w-md mx-auto border border-white">
+            <div class="mb-8 text-center">
+                <div class="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800">Autentikasi Aman</h2>
+            </div>
+            <div class="space-y-5">
+                <div>
+                    <input type="password" id="password" placeholder="Masukkan Password Rahasia..." class="w-full border-slate-200 border-2 px-5 py-4 rounded-xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all font-medium text-center text-lg">
+                </div>
+                <button onclick="login()" class="w-full bg-indigo-600 text-white font-bold text-lg px-4 py-4 rounded-xl hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                    Buka Dashboard
+                </button>
+            </div>
+        </div>
+
+        <div id="dashboard-area" class="hidden space-y-6">
+            
+            <div class="bg-white p-8 rounded-3xl shadow-lg border-t-4 border-t-blue-500">
+                <div class="flex items-center mb-6">
+                    <div class="bg-blue-100 p-3 rounded-xl mr-4"><svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg></div>
+                    <h2 class="text-2xl font-bold text-slate-800">Buat Instansi Baru</h2>
+                </div>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <input type="text" id="new-folder-name" placeholder="Ketik nama instansi (Contoh: KUA Dengilo)..." class="flex-1 border-slate-200 border-2 px-5 py-4 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all font-medium">
+                    <button onclick="createFolder()" id="btn-folder" class="bg-blue-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-blue-700 shadow-md transition-all whitespace-nowrap">
+                        Buat Folder Baru
+                    </button>
                 </div>
             </div>
 
-            <div class="bg-green-50 p-4 rounded border border-green-200">
-                <h2 class="font-bold mb-2">2. Upload Struk PDF</h2>
-                <select id="folder-select" class="w-full border p-2 rounded mb-3">
-                    <option value="">Pilih Folder Instansi...</option>
-                </select>
-                <input type="file" id="file-input" accept="application/pdf" class="w-full border p-2 rounded mb-3 bg-white">
-                <button onclick="uploadFile()" id="btn-upload" class="w-full bg-green-600 text-white p-2 rounded font-bold">Upload PDF</button>
+            <div class="bg-white p-8 rounded-3xl shadow-lg border-t-4 border-t-emerald-500">
+                <div class="flex items-center mb-6">
+                    <div class="bg-emerald-100 p-3 rounded-xl mr-4"><svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg></div>
+                    <h2 class="text-2xl font-bold text-slate-800">Upload Dokumen Struk</h2>
+                </div>
+                
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2 uppercase tracking-wide">1. Pilih Folder Tujuan</label>
+                        <select id="folder-select" class="w-full border-slate-200 border-2 px-5 py-4 rounded-xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all bg-slate-50 cursor-pointer font-medium text-slate-700">
+                            <option value="">-- Sedang Memuat Data... --</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-slate-600 mb-2 uppercase tracking-wide">2. Pilih File PDF</label>
+                        <input type="file" id="file-input" accept="application/pdf" class="w-full border-slate-200 border-2 px-4 py-3 rounded-xl text-slate-600 font-medium file:mr-4 file:py-2.5 file:px-6 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 transition-all cursor-pointer bg-slate-50">
+                    </div>
+
+                    <button onclick="uploadFile()" id="btn-upload" class="w-full bg-emerald-600 text-white font-bold text-lg px-4 py-4 rounded-xl hover:bg-emerald-700 shadow-md mt-4 transition-all">
+                        Mulai Proses Upload
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // GANTI TULISAN DI BAWAH INI DENGAN URL WEB APP GOOGLE SCRIPT ANDA
+        // URL Google Script Anda sudah dimasukkan di sini
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx3GQNc9k36TF7gWfGIGFpmHTAwMxB72FjPxCk9qbmA4mMszdOzr0vQEqmPX6jqCGXlkQ/exec";
         let adminPass = "";
 
-        // Fungsi Login & Ambil Folder
         function login() {
             adminPass = document.getElementById('password').value;
             if(!adminPass) return alert("Masukkan password!");
@@ -52,52 +89,53 @@
             loadFolders();
         }
 
-        // Memuat dropdown folder
         function loadFolders() {
+            const select = document.getElementById('folder-select');
+            select.innerHTML = '<option value="">Memuat daftar instansi...</option>';
             fetch(SCRIPT_URL + "?action=getFolders")
                 .then(res => res.json())
                 .then(data => {
-                    const select = document.getElementById('folder-select');
-                    select.innerHTML = '<option value="">Pilih Folder Instansi...</option>';
+                    select.innerHTML = '<option value="">--- Klik Untuk Memilih Instansi Tujuan ---</option>';
                     data.data.forEach(folder => {
-                        select.innerHTML += `<option value="${folder.id}">${folder.name}</option>`;
+                        select.innerHTML += `<option value="${folder.id}">📂 ${folder.name}</option>`;
                     });
+                }).catch(() => {
+                    select.innerHTML = '<option value="">Gagal memuat. Silakan muat ulang halaman.</option>';
                 });
         }
 
-        // Fungsi Buat Folder
         function createFolder() {
             const name = document.getElementById('new-folder-name').value;
-            if(!name) return alert("Isi nama folder!");
+            if(!name) return alert("Silakan ketik nama instansi terlebih dahulu!");
             const btn = document.getElementById('btn-folder');
-            btn.innerText = "Memproses...";
+            
+            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memproses...`;
             
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify({ action: 'createFolder', password: adminPass, folderName: name })
             }).then(res => res.json()).then(res => {
                 alert(res.message);
-                btn.innerText = "Buat Folder";
+                btn.innerText = "Buat Folder Baru";
                 document.getElementById('new-folder-name').value = '';
-                if(res.status === 'success') loadFolders(); // Refresh dropdown
+                if(res.status === 'success') loadFolders(); 
             });
         }
 
-        // Fungsi Upload PDF
         function uploadFile() {
             const folderId = document.getElementById('folder-select').value;
             const fileInput = document.getElementById('file-input');
             
-            if(!folderId) return alert("Pilih folder terlebih dahulu!");
-            if(fileInput.files.length === 0) return alert("Pilih file PDF!");
+            if(!folderId) return alert("Pilih folder tujuan terlebih dahulu!");
+            if(fileInput.files.length === 0) return alert("Pilih file PDF yang akan diupload!");
 
             const file = fileInput.files[0];
             const btn = document.getElementById('btn-upload');
-            btn.innerText = "Mengunggah... Mohon tunggu";
+            
+            btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Sedang Mengunggah...`;
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Hapus awalan data:application/pdf;base64, agar bisa dibaca Apps Script
                 const base64Data = e.target.result.split(',')[1];
                 
                 fetch(SCRIPT_URL, {
@@ -111,11 +149,11 @@
                     })
                 }).then(res => res.json()).then(res => {
                     alert(res.message);
-                    btn.innerText = "Upload PDF";
+                    btn.innerText = "Mulai Proses Upload";
                     fileInput.value = '';
                 }).catch(err => {
-                    alert("Error: Pastikan ukuran PDF tidak terlalu besar (maks ~3MB)");
-                    btn.innerText = "Upload PDF";
+                    alert("Gagal mengunggah! Pastikan ukuran PDF tidak lebih dari 5MB.");
+                    btn.innerText = "Mulai Proses Upload";
                 });
             };
             reader.readAsDataURL(file);

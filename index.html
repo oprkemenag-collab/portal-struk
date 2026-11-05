@@ -10,59 +10,50 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
     
-    <!-- Bagian Header Mewah (Tema Emerald/Teal) -->
+    <!-- Bagian Header (Tema Emerald) -->
     <div class="bg-gradient-to-r from-emerald-700 to-teal-900 pb-24 pt-6 px-6 text-center shadow-inner relative">
-        
-        <!-- Tombol Admin -->
-        <a href="admin.html" title="Login Admin" class="absolute top-4 right-4 sm:top-6 sm:right-8 flex items-center text-sm font-semibold text-emerald-100 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors border border-white/10 backdrop-blur-sm shadow-sm cursor-pointer">
+        <a href="admin.html" class="absolute top-4 right-4 sm:top-6 sm:right-8 flex items-center text-sm font-semibold text-emerald-100 hover:text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors border border-white/10 backdrop-blur-sm shadow-sm cursor-pointer">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             Admin Panel
         </a>
-
         <div class="pt-8">
             <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight">ARSIP DOKUMEN STRUK PEMBELIAN</h1>
             <p class="text-emerald-100 font-medium text-lg">Temukan dan unduh dokumen instansi Anda dengan mudah</p>
         </div>
     </div>
 
-    <!-- Area Konten Utama (z-10 agar selalu di atas) -->
+    <!-- Area Konten Utama -->
     <div class="max-w-5xl mx-auto px-4 sm:px-6 -mt-12 mb-12 relative z-10">
-        
-        <!-- Area Kategori/Folder -->
-        <div id="folder-view" class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-200 transition-all">
-            <div class="flex flex-col sm:flex-row items-center justify-between mb-8 border-b border-slate-100 pb-4">
-                <h2 class="text-2xl font-bold text-slate-800 flex items-center">
-                    <svg class="w-7 h-7 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                    Direktori Instansi
+        <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-200 transition-all min-h-[400px]">
+            
+            <!-- Header Navigasi -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 border-b border-slate-100 pb-4 gap-4">
+                <h2 id="current-title" class="text-2xl font-bold text-slate-800 flex items-center">
+                    <svg class="w-7 h-7 mr-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                    Direktori Utama
                 </h2>
-                <span class="mt-3 sm:mt-0 text-sm bg-emerald-50 text-emerald-700 py-1.5 px-4 rounded-full font-bold border border-emerald-100">Silakan Pilih Folder</span>
-            </div>
-            
-            <div id="loading-folders" class="flex justify-center items-center py-12">
-                <div class="animate-spin rounded-full h-10 w-10 border-b-4 border-emerald-600"></div>
-                <span class="ml-4 text-slate-500 font-semibold text-lg">Memuat data folder...</span>
-            </div>
-            
-            <div id="folder-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-            </div>
-        </div>
-
-        <!-- Area File PDF -->
-        <div id="file-view" class="hidden bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-200">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 border-b border-slate-100 pb-5 gap-4">
-                <h2 id="folder-title" class="text-2xl font-bold text-emerald-800">Daftar Dokumen</h2>
-                <button onclick="backToFolders()" class="flex items-center text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-emerald-700 px-4 py-2 rounded-lg transition-colors w-fit">
+                <button id="btn-back" onclick="goBack()" class="hidden flex items-center text-sm font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-emerald-700 px-4 py-2 rounded-lg transition-colors">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    Kembali
+                    Kembali Ke Atas
                 </button>
             </div>
             
-            <div id="loading-files" class="hidden flex justify-center items-center py-12">
+            <!-- Animasi Loading -->
+            <div id="loading-indicator" class="flex justify-center items-center py-12">
                 <div class="animate-spin rounded-full h-10 w-10 border-b-4 border-emerald-600"></div>
-                <span class="ml-4 text-slate-500 font-semibold text-lg">Mencari dokumen...</span>
+                <span class="ml-4 text-slate-500 font-semibold text-lg">Memuat direktori...</span>
             </div>
             
-            <div id="file-container" class="space-y-4">
+            <!-- Tempat Muncul Folder -->
+            <div id="folder-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-6"></div>
+            
+            <!-- Tempat Muncul File -->
+            <div id="file-container" class="space-y-4"></div>
+
+            <!-- Pesan Kosong -->
+            <div id="empty-state" class="hidden text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
+                <svg class="w-16 h-16 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <p class="text-slate-500 font-semibold text-lg">Folder ini kosong.</p>
             </div>
         </div>
     </div>
@@ -70,51 +61,64 @@
     <script>
         // GANTI TULISAN DI BAWAH INI DENGAN URL GOOGLE SCRIPT ANDA
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx3GQNc9k36TF7gWfGIGFpmHTAwMxB72FjPxCk9qbmA4mMszdOzr0vQEqmPX6jqCGXlkQ/exec";
+        
+        // Sistem Navigasi Bertingkat (Breadcrumb)
+        let navHistory = [{ id: 'root', name: 'Direktori Utama' }];
 
-        fetch(SCRIPT_URL + "?action=getFolders")
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('loading-folders').classList.add('hidden');
-                const container = document.getElementById('folder-container');
-                data.data.forEach(folder => {
-                    // Desain Folder Baru (Garis sisi kiri + Ikon Arsip)
-                    container.innerHTML += `
-                        <div onclick="openFolder('${folder.id}', '${folder.name}')" 
-                             class="group bg-white p-4 rounded-xl border border-slate-200 border-l-4 border-l-emerald-500 cursor-pointer hover:bg-emerald-50 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                            <div class="flex items-center">
-                                <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mr-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors shadow-sm shrink-0">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-                                </div>
-                                <h3 class="text-md sm:text-lg font-bold text-slate-700 group-hover:text-emerald-800 leading-tight">${folder.name}</h3>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
+        // Memuat konten saat web pertama kali dibuka
+        loadContents('root');
 
-        function openFolder(folderId, folderName) {
-            document.getElementById('folder-view').classList.add('hidden');
-            document.getElementById('file-view').classList.remove('hidden');
-            document.getElementById('folder-title').innerText = "🗃️ " + folderName;
+        function loadContents(folderId) {
+            document.getElementById('loading-indicator').classList.remove('hidden');
+            document.getElementById('folder-container').innerHTML = '';
             document.getElementById('file-container').innerHTML = '';
-            document.getElementById('loading-files').classList.remove('hidden');
+            document.getElementById('empty-state').classList.add('hidden');
+            
+            // Atur tombol kembali dan Judul
+            const currentFolder = navHistory[navHistory.length - 1];
+            document.getElementById('current-title').innerHTML = `<svg class="w-7 h-7 mr-3 text-emerald-600 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg> ${currentFolder.name}`;
+            
+            if (navHistory.length > 1) {
+                document.getElementById('btn-back').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-back').classList.add('hidden');
+            }
 
-            fetch(SCRIPT_URL + "?action=getFiles&folderId=" + folderId)
+            // Ambil data dari Google Apps Script
+            fetch(SCRIPT_URL + "?action=getContents&folderId=" + folderId)
                 .then(res => res.json())
                 .then(data => {
-                    document.getElementById('loading-files').classList.add('hidden');
-                    const container = document.getElementById('file-container');
+                    document.getElementById('loading-indicator').classList.add('hidden');
+                    const folderContainer = document.getElementById('folder-container');
+                    const fileContainer = document.getElementById('file-container');
                     
-                    if(data.data.length === 0) {
-                        container.innerHTML = `
-                        <div class="text-center py-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
-                            <svg class="w-16 h-16 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            <p class="text-slate-500 font-semibold text-lg">Belum ada dokumen struk di folder ini.</p>
-                        </div>`;
+                    const folders = data.data.folders;
+                    const files = data.data.files;
+
+                    // Cek jika kosong
+                    if (folders.length === 0 && files.length === 0) {
+                        document.getElementById('empty-state').classList.remove('hidden');
+                        return;
                     }
-                    
-                    data.data.forEach(file => {
-                        container.innerHTML += `
+
+                    // Render Sub-Folder
+                    folders.forEach(folder => {
+                        folderContainer.innerHTML += `
+                            <div onclick="openFolder('${folder.id}', '${folder.name}')" 
+                                 class="group bg-white p-4 rounded-xl border border-slate-200 border-l-4 border-l-emerald-500 cursor-pointer hover:bg-emerald-50 hover:border-emerald-400 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                                <div class="flex items-center">
+                                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mr-4 group-hover:bg-emerald-600 group-hover:text-white transition-colors shadow-sm shrink-0">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                                    </div>
+                                    <h3 class="text-md sm:text-lg font-bold text-slate-700 group-hover:text-emerald-800 leading-tight">${folder.name}</h3>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    // Render File PDF
+                    files.forEach(file => {
+                        fileContainer.innerHTML += `
                             <div class="bg-white border border-slate-200 p-5 rounded-xl hover:shadow-md hover:border-teal-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div class="flex items-center overflow-hidden">
                                     <div class="bg-red-50 p-3 rounded-lg mr-4 border border-red-100 shrink-0">
@@ -132,9 +136,19 @@
                 });
         }
 
-        function backToFolders() {
-            document.getElementById('file-view').classList.add('hidden');
-            document.getElementById('folder-view').classList.remove('hidden');
+        // Fungsi klik masuk ke dalam folder
+        function openFolder(id, name) {
+            navHistory.push({ id: id, name: name });
+            loadContents(id);
+        }
+
+        // Fungsi tombol kembali ke atas
+        function goBack() {
+            if (navHistory.length > 1) {
+                navHistory.pop(); // Hapus folder saat ini dari memori
+                const previousFolder = navHistory[navHistory.length - 1];
+                loadContents(previousFolder.id);
+            }
         }
     </script>
 </body>
